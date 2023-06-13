@@ -124,3 +124,5 @@ transaction.commit();
 - em.detach(entity) : 특정 엔티티를 준 영속 상태로 전환
 - em.clear() : 영속성 컨텍스트를 완전히 초기화
 - em.close() : 영속성 컨테스트 종료
+
+### 추가로 작성
