@@ -21,7 +21,6 @@
 
 ### 영속성 컨텍스트의 이점 
 
-
 1. 1차 캐시
 
 ```java
@@ -128,6 +127,38 @@ transaction.commit();
 
 ## 객체와 테이블 매핑
 
+### 데이터베이스 스키마 (DDL) 자동 생성 기능 
+
+persistence.xml
+```xml
+<properties>
+    <property name="hibernate.hbm2ddl.auto" value="create" />
+</properties>
+```
+의 값에 따라서 DDL 자동실행 여부 결정
+
+#### hibernate.hbm2ddl.auto 옵션(value)에 따른 상황
+
+| 옵션 명        | 설명                              |
+|:------------|:--------------------------------|
+| create      | 기존테이블 삭제 후 다시 실행(DROP + CREATE) |
+| create-drop | create와 같지만, 종료시점에 테이블 DROP     |
+| update      | 변경 분만 방영(운영DB에 상요하면 안됨)         |
+| validate    | 엔티티와 테이블이 정상적으로 매핑되었는지만 확인      |
+| none        | 사용하지 않음                         |
+
+### @Column (nullable =  false , length = 10)
+
+### @Table 유니크 제약 조건 추가
+
+```java
+@Table( uniqueConstraint = 
+        { @UniqueConstraint(
+            name = "NAME_AGE_UNIQUE", 
+            columnNames = {"NAME", "AGE"})
+        })
+```
+
 ### @Entity
 
 - `@Entity`가 붙은 클래스는 JPA가 관리. 엔티티라고 부른다.
@@ -135,6 +166,22 @@ transaction.commit();
 
 **❗ 주의**
 
-    - 기본 생성자 필수
-    - final 클래스, enum, interface, inner 클래스 사용
-    - 저장할 필드에 final 사용 x
+```markdown
+- 기본 생성자 필수
+- final 클래스, enum, interface, inner 클래스 사용X
+- 저장할 필드에 final 사용X
+```
+
+#### name 속성
+
+JPA에서 사용할 엔티티 이름을 지정한다.
+```java
+@Entity( name = "MBR")
+public class Member {
+    //...
+}
+```
+
+- 기본값: 클래스 이름을 그대로 사용(ex: Member)
+- 값은 클래스 이름이 없으면 가급적 기본값을 사용
+``
