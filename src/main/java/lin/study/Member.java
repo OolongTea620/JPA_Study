@@ -1,16 +1,35 @@
 package lin.study;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.math.BigInteger;
+import java.util.Date;
 
 @Entity
-@Table(name="member")
 public class Member {
     @Id
     private Long id;
+
+    @Column(name= "name", nullable = false)
     private String name;
 
+    private int age;
+
+    @Enumerated(EnumType.STRING) // ORDINAL 사용 금지
+    private RoleType roleType;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastModifiedDate;
+
+    @Lob // long text;
+    private String description;
+
+    @Transient
+    private int temp;
+
+    public Member() {}
     public Long getId() {
         return id;
     }
