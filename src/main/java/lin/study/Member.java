@@ -1,45 +1,34 @@
 package lin.study;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 import java.util.Date;
 
 @Entity
+@TableGenerator(name="MEMBER_SEQ_GENERATOR",table = "MY_SEQUENCE",
+pkColumnValue = "MEMBER_SEQ", allocationSize = 1
+)
 public class Member {
     @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "MEMBER_SEQ_GENERATOR")
     private Long id;
 
     @Column(name= "name", nullable = false)
     private String name;
 
-    private int age;
+    public Member() {
 
-    @Enumerated(EnumType.STRING) // ORDINAL 사용 금지
-    private RoleType roleType;
+    }
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModifiedDate;
-
-    @Lob // long text;
-    private String description;
-
-    @Transient
-    private int temp;
-
-    public Member() {}
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
