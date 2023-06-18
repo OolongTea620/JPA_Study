@@ -1,7 +1,6 @@
 package lin.study;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @TableGenerator(name="MEMBER_SEQ_GENERATOR",table = "MY_SEQUENCE",
