@@ -23,45 +23,20 @@ public class Main {
         tx.begin();
 
         try {
-            //code : Member 객체 저장
-            //DB 저장은 트렌젝션 관리
-            
+            Team team = new Team();
+            team.setName("TeamA");
+
             Member member = new Member();
-            member.setId(1L);
-            member.setName("myname"); // 비영속 상태
+            member.setUsername("member1");
+            member.setTeam(team);
+            em.persist(member);
 
-            //  Member 테이블에 인스턴스 저장
-            em.persist(member); // 영속 상태, DB에 저장 안됨
-            
-            tx.commit(); // 트랜젝션 커밋
+            em.flush();
+            em.clear();
 
-
-            // 데이터 찾기
-            Member findMember = em.find(Member.class, 1L); // pk가 1인 인스턴스 가져옴
-            System.out.println("findMember = " + findMember.getId());
-            System.out.println("findMember = " + findMember.getName());
-
-            tx.commit();
-
-            // 삭젝하기
-            em.remove(findMember);
-
-            // 수정하기
-            Member member2 = new Member();
-            member2.setId(2L);
-            member2.setName("test");
-            em.persist(member2);
-
-            tx.commit();
-
-            Member findMember2 = em.find(Member.class, 2L);
-            System.out.println("id = "+ findMember2.getId());
-            System.out.println("name = "+ findMember2.getName());
-            findMember2.setName("test2"); // jpa가 자동으로 수정 반영
-            System.out.println("=====================");
-            System.out.println("id = "+ findMember2.getId());
-            System.out.println("name = "+ findMember2.getName());
-
+            Member findMember = em.find(Member.class, member.getId());
+            // 참조 관계를 사용해서 연관관계 조회
+            Team findTeam = findMember.getTeam();
             tx.commit();
 
 

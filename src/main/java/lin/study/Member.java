@@ -3,17 +3,21 @@ package lin.study;
 import javax.persistence.*;
 
 @Entity
-@TableGenerator(name="MEMBER_SEQ_GENERATOR",table = "MY_SEQUENCE",
-pkColumnValue = "MEMBER_SEQ", allocationSize = 1
-)
 public class Member {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "MEMBER_SEQ_GENERATOR")
+    @GeneratedValue
     private Long id;
 
-    @Column(name= "name", nullable = false)
-    private String name;
+    @Column(name= "USERNAME")
+    private String username;
 
+    // 테이블에 따른 매핑
+//    @Column(name = "TEAM_ID")
+//    private Long teamId;
+
+    @ManyToOne(fetch = FetchType.LAZY) // Member : Team <-> n : 1, Member 클래스 안에 선언이 되었으므로, Member의 기준에서 어노테이션을 달아준다.
+    @JoinColumn(name  = "TEAM_ID") // 조인하는 컬럼명
+    private Team team;
     public Member() {
 
     }
@@ -26,11 +30,19 @@ public class Member {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }
