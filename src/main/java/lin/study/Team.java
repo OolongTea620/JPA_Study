@@ -15,7 +15,7 @@ public class Team {
     private String name;
 
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team") // 1 : n에서 무엇과 매핑되어 있지?
     // member와 객제적으로 매핑된 변수명
     private List<Member> members = new ArrayList<>();
 
@@ -33,5 +33,9 @@ public class Team {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Member> getMembers() {
+        return this.members;
     }
 }
