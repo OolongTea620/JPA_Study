@@ -23,23 +23,20 @@ public class Main {
         tx.begin();
 
         try {
-            Team team = new Team();
-            team.setName("TeamA");
-
             Member member = new Member();
-            member.setUsername("member1");
-            member.setTeam(team);
+            member.setUsername("hello");
+
             em.persist(member);
 
             em.flush();
             em.clear();
 
+            //
+
             Member findMember = em.find(Member.class, member.getId());
-            // 참조 관계를 사용해서 연관관계 조회
-            Team findTeam = findMember.getTeam();
-            tx.commit();
-
-
+            System.out.println("findMember.id = " + findMember.getClass()); // 프록시가 만든 가짜 클래스
+            System.out.println("findMember.id = " + findMember.getId());
+            System.out.println("findMember.username = " + findMember.getUsername());
         }
         catch (Exception e) {
             tx.rollback(); // 트랜젝션 롤백
