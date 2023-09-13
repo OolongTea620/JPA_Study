@@ -95,15 +95,65 @@ Team team = member.getTeam();
 * ex)부모 엔티티를 저장할 때 자식 엔티티도 함께 저장
 
 #### 영속성 전이 : 저장
+**종류**
 
+```text
+- ALL : 모두 적용 
+- PERSIST : 영속 (저장)
+- REMOVE : 삭제
+- MERGE : 병합
+- REFRESH : 
+- DETACH : 
+```
 
-### 고아 객체
+#### ALL
+Parent 엔티티와 Child 엔티티의 생명주기가 동일 할 때,
 
+### 고아 객체 (orphanRemoval = true)
+부모 엔티티와 연관관계가 끊어진 자식 엔티티
 
+* 고아 객체 제거: 부모 엔티티와 연관관계가 끊어진 자식 엔티티 삭제
+* orphanRemoval = true
+* 참조가 제거된 엔티티는 다른 곳에서 참조하지 않는 고아 객체로 보고 삭제하는 기능
+
+```java
+Parent parent1 = em.find(Parent.class, id);
+parent.getChildren().remove(0); // 자식 엔티티를 컬렉션에서 제거
+```
+
+```sql
+Delete From Child Where id = ?
+```
+
+#### 주의점
+* **참조하는 곳이 하나일 때 사용해야 한다.**
+* **특정 엔티티가 개인 소유할 때 사용해야한다.**
+* @OneToOne, @OneToMany만 가능
+* 개념적으로 부모를 제거하면 자식은 고아가 된다.
+  * 따라서, 부모를 제거할 때, 자식도 함께 제거된다.
+  * `CascadeType.REMOVE`처럼 동작한다.
 
 ### 영속성 전이 + 고아 객체 , 생명 주기
 
+* CascadeType.ALL + orphanRemoval=true
+* 스스로 생명주기를 관리하는 엔티티는 em.persist()로 영속화, em.remove()로 제거
+* 두 옵션을 모두 활성화 하면, 부모 엔티티를 통해서 자식의 생명 주기를 관리할 수 있음
+* 도메인 주도 설계 Aggregate Root 개념 구현시 유용
 
+---
+### 부록
 
-### 연관관계 관리
-
+**참조**  
+📕 orphanRemoval vs Cascade.REMOVE
+[StackOverFlow](https://stackoverflow.com/questions/18813341/what-is-the-difference-between-cascadetype-remove-and-orphanremoval-in-jpa)  
+[티스로리 1](https://kobumddaring.tistory.com/56)  
+[티스토리 2](https://modimodi.tistory.com/22)
+1. orphanRemoval=true와 Cascade.REMOVE의 차이는?
+  
+* orphanRemoval
+  * 관계가 끊어진 순간 **DB삭제 쿼리 날라감**
+  * 부모엔티티가 사라지면서 자식 엔티티의 참조가 끊어져서 삭제됨
+* Cascade.REMOVE
+  * 관계가 끊어진 child를 당장 바로 자동으로 제거하지 않는다. 
+    * flush()가 호출 될 때 쿼리 수행
+  * 원래 지정 엔티티 삭제 시, 연관된 엔티티를 전부 삭제하는 옵션

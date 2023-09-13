@@ -1,5 +1,8 @@
 package lin.study;
 
+import lin.study.example.Child;
+import lin.study.example.Parent;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -23,20 +26,16 @@ public class Main {
         tx.begin();
 
         try {
-            Member member = new Member();
-            member.setUsername("hello");
+            Child child1 = new Child();
+            Child child2 = new Child();
 
-            em.persist(member);
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
 
-            em.flush();
-            em.clear();
-
-            //
-
-            Member findMember = em.find(Member.class, member.getId());
-            System.out.println("findMember.id = " + findMember.getClass()); // 프록시가 만든 가짜 클래스
-            System.out.println("findMember.id = " + findMember.getId());
-            System.out.println("findMember.username = " + findMember.getUsername());
+            em.persist(child1);
+            em.persist(child2);
+            em.persist(parent);
         }
         catch (Exception e) {
             tx.rollback(); // 트랜젝션 롤백
